@@ -18,7 +18,7 @@ public class ClienteRequestDTO {
     private String nome;
 
     @NotBlank(message = "O CPF é obrigatório")
-    @CPF(message = "Formato de CPF inválido")
+    //@CPF(message = "Formato de CPF inválido")
     private String cpf;
 
     @NotBlank(message = "O e-mail é obrigatório")

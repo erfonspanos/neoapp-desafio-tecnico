@@ -2,6 +2,7 @@ package com.neoapp.desafio.api_clientes.model;
 
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -18,7 +19,7 @@ public class Endereco {
     @NotBlank(message = "O logradouro é obrigatório")
     private String logradouro;
 
-    @NotBlank(message = "O número é obrigatório")
+    @NotNull(message = "O número é obrigatório")
     private int numero;
 
     private String complemento;

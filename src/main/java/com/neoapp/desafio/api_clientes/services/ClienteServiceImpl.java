@@ -117,6 +117,12 @@ public class ClienteServiceImpl implements ClienteService {
         entity.setTelefone(dto.getTelefone());
         entity.setDataNascimento(dto.getDataNascimento());
 
+        String cpfLimpo = dto.getCpf().replaceAll("[^0-p9]", "");
+        if (cpfLimpo.length() != 11) { // Adicione a validação do tamanho
+            throw new IllegalArgumentException("Formato de CPF inválido.");
+        }
+        entity.setCpf(cpfLimpo);
+
         //Normalizar o CEP, removendo o hífen para salvar no banco
         String cepLimpo = dto.getEndereco().getCep().replaceAll("[^0-9]", "");
         if (cepLimpo.length() != 8) {
