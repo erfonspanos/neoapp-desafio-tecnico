@@ -9,6 +9,8 @@ public interface ClienteService {
 
     Page<ClienteResponseDTO> listarTodos(Pageable pageable);
 
+    Page<ClienteResponseDTO> buscarPorFiltros(String nome, String cpf, String email, Pageable pageable);
+
     ClienteResponseDTO buscarPorId(Long id);
 
     ClienteResponseDTO adicionarCliente(ClienteRequestDTO clienteDTO);

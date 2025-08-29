@@ -20,25 +20,25 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long  id;
+    private Long  id;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    @Column(nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "telefone", nullable = false)
     private String telefone;
 
-    @Column(nullable = false)
+    @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
     @CreationTimestamp
-    @Column(nullable = false ,updatable = false)
+    @Column(name = "data_cadastro", nullable = false ,updatable = false)
     private LocalDateTime dataCadastro;
 
     @Embedded
