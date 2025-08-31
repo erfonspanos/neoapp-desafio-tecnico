@@ -21,6 +21,14 @@ public class ResourceExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<StandardError> businessRuleViolation(BusinessRuleException e, HttpServletRequest request) {
+        String error = "Bad Request"; // Ou "Violação de Regra de Negócio"
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
 }
 
 @Getter
