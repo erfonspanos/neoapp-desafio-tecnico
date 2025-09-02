@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -48,6 +49,7 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @clienteSecurity.checkClienteId(authentication, #id)")
     public ResponseEntity<ClienteResponseDTO> buscarPorId(@PathVariable Long id) {
         ClienteResponseDTO dto = service.buscarPorId(id);
         return ResponseEntity.ok(dto);
@@ -63,12 +65,14 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @clienteSecurity.checkClienteId(authentication, #id)")
     public ResponseEntity<ClienteResponseDTO> atualizarCliente(@PathVariable Long id, @Valid @RequestBody ClienteRequestDTO dto) {
         ClienteResponseDTO updatedDto = service.atualizarCliente(id, dto);
         return ResponseEntity.ok(updatedDto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @clienteSecurity.checkClienteId(authentication, #id)")
     public ResponseEntity<Void> removerCliente(@PathVariable Long id) {
         service.removerCliente(id);
 
