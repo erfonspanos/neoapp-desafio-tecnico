@@ -1,5 +1,6 @@
 package com.neoapp.desafio.api_clientes.services;
 
+import com.neoapp.desafio.api_clientes.dto.AdminCreationDTO;
 import com.neoapp.desafio.api_clientes.dto.ClienteResponseDTO;
 import com.neoapp.desafio.api_clientes.dto.RegistroUsuarioDTO;
 import com.neoapp.desafio.api_clientes.exceptions.BusinessRuleException;
@@ -54,6 +55,20 @@ public class AutenticacaoService implements UserDetailsService {
         usuarioRepository.save(novoUsuario);
 
         return toClienteResponseDTO(clienteExistente);
+    }
+
+    @Transactional
+    public void criarAdmin(AdminCreationDTO dto){
+        if(usuarioRepository.findByEmail(dto.email()).isPresent()){
+            throw new BusinessRuleException("E-mail já cadastrado no sistema.");
+        }
+
+        Usuario novoAdmin = new Usuario();
+        novoAdmin.setEmail(dto.email());
+        novoAdmin.setSenha(passwordEncoder.encode(dto.senha()));
+        novoAdmin.setRole(Role.ADMIN);
+        novoAdmin.setCliente(null);
+        usuarioRepository.save(novoAdmin);
     }
 
     private ClienteResponseDTO toClienteResponseDTO(Cliente entity) {

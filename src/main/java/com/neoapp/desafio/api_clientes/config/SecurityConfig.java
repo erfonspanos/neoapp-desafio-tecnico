@@ -35,6 +35,7 @@ public class SecurityConfig {
                     req.requestMatchers("/auth/login", "/auth/register").permitAll();
                     req.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
 
+                    req.requestMatchers(HttpMethod.POST, "/usuarios/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.POST, "/clientes").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "/clientes").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "/clientes/buscar").hasRole("ADMIN");
