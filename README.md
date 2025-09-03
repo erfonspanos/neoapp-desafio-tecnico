@@ -89,7 +89,7 @@ Um usuário **Administrador** padrão é criado automaticamente (`DataSeeder`) p
 * **Email:** `admin@neoapp.com`
 * **Senha:** `admin123`
 
-### Autenticação (`/auth`)
+### Autenticação de Usuário Admin (`/auth`)
 
 #### `POST /auth/login`
 * **Descrição:** Autentica um usuário (Admin ou Cliente) e retorna um token JWT.
@@ -107,18 +107,6 @@ Um usuário **Administrador** padrão é criado automaticamente (`DataSeeder`) p
         "token": "eyJhbGciOiJIUzI1NiJ9..."
     }
     ```
-
-#### `POST /auth/register`
-* **Descrição:** Permite que um cliente já cadastrado (por um admin) crie sua conta de usuário, definindo uma senha.
-* **Permissão:** Público.
-* **Request Body:**
-    ```json
-    {
-        "email": "cliente.cadastrado@email.com",
-        "senha": "senhaForte123"
-    }
-    ```
-* **Success Response (201 Created):** Retorna os dados do perfil do cliente recém-registrado.
 
 ### Gerenciamento de Usuários (`/usuarios`)
 
@@ -140,6 +128,16 @@ Um usuário **Administrador** padrão é criado automaticamente (`DataSeeder`) p
 * **Descrição:** Cria um novo perfil de cliente. **Nota:** Esta ação não cria a conta de usuário associada.
 * **Permissão:** `ADMIN`.
 * **Request Body:** `ClienteRequestDTO` (contendo nome, cpf, email, etc.).
+   ```json
+    {
+      "nome": "Carla Vieira",
+      "cpf": "12312312311",
+      "email": "carla.vieira@email.com",
+      "telefone": "85912345678",
+      "dataNascimento": "1995-10-08",
+      "endereco": { "cep": "60123456", "logradouro": "Avenida Beira Mar", "numero": "3000", "bairro": "Meireles", "cidade": "Fortaleza", "estado": "CE" }
+   }
+    ```
 * **Success Response (201 Created):** Retorna os dados do cliente recém-criado.
 
 #### `GET /clientes`
@@ -148,7 +146,7 @@ Um usuário **Administrador** padrão é criado automaticamente (`DataSeeder`) p
 * **Query Params:** `page`, `size`, `sort` (ex: `?page=0&size=10&sort=nome,asc`).
 * **Success Response (200 OK):** Retorna um objeto `Page` com a lista de clientes.
 
-#### `GET /clientes/buscar`
+#### `GET /clientes/buscar` ou `/clientes/buscar?cidade=... | /buscar?nome=...`
 * **Descrição:** Realiza uma busca dinâmica e paginada por múltiplos atributos.
 * **Permissão:** `ADMIN`.
 * **Query Params:** `nome`, `cpf`, `email`, `cidade`, etc.
@@ -169,6 +167,38 @@ Um usuário **Administrador** padrão é criado automaticamente (`DataSeeder`) p
 * **Descrição:** Exclui um cliente e o usuário associado a ele.
 * **Permissão:** `ADMIN` ou `CLIENTE` (apenas se o ID for o seu próprio).
 * **Success Response (204 No Content):** Resposta vazia.
+
+### Autenticação de Usuários Cliente (`/auth`)
+
+#### FAZER ESSE PASSO SOMENTE APOS O POST DO CLIENTE!
+#### `POST /auth/register`
+* **Descrição:** Permite que um cliente já cadastrado (por um admin) crie sua conta de usuário, definindo uma senha. (Senha é criada na hora do registro do usuário cliente, pelo próprio cliente, email é o que o admin cadastrou do cliente)
+* **Permissão:** Público.
+* **Request Body:**
+    ```json
+    {
+        "email": "carla.vieira@email.com",
+        "senha": "cliente123"
+    }
+    ```
+* **Success Response (201 Created):** Retorna os dados do perfil do cliente recém-registrado.
+
+#### `POST /auth/login`
+* **Descrição:** Permite que um usuário ja cadastrado como cliente faça a autenticação e receba seu token (necessario passar como Bearer token no Postman para teste)
+* **Permissão:** Público.
+* **Request Body:**
+    ```json
+    {
+        "email": "carla.vieira@email.com",
+        "senha": "cliente123"
+    }
+    ```
+* **Success Response (200 OK):**
+    ```json
+    {
+        "token": "eyJhbGciOiJIUzI1NiJ9..."
+    }
+    ```
 
 ---
 
@@ -200,6 +230,5 @@ Este projeto foi desenvolvido com foco em criar uma base de código limpa, segur
 
 ## 🔮 Próximos Passos e Melhorias Futuras
 
-* **Deploy na Nuvem:** Publicar a aplicação containerizada em um provedor de nuvem (Heroku, Render, AWS) para torná-la acessível publicamente.
 * **Cache:** Implementar uma camada de cache (ex: com Redis) para otimizar consultas frequentes e melhorar a performance.
 * **Testes de Integração Contínua (CI/CD):** Configurar um pipeline de CI/CD (ex: com GitHub Actions) para automatizar a execução dos testes e o processo de deploy.
