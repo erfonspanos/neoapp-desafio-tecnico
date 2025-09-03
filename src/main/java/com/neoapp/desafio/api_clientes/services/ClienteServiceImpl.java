@@ -27,6 +27,9 @@ public class ClienteServiceImpl implements ClienteService {
     @Autowired
     private ClienteRepository repository;
 
+    @Autowired
+    private AutenticacaoService autenticacaoService;
+
     @Transactional(readOnly = true)
     @Override
     public Page<ClienteResponseDTO> listarTodos(Pageable pageable) {
@@ -119,6 +122,7 @@ public class ClienteServiceImpl implements ClienteService {
             throw new ResourceNotFoundException("Recurso não encontrado. Id: " + id);
         }
         try {
+            autenticacaoService.removerUsuarioPorClienteId(id);
             repository.deleteById(id);
         } catch (DataIntegrityViolationException e){
             throw new DataIntegrityViolationException("Violação de integridade referencial.");

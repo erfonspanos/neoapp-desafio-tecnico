@@ -4,6 +4,7 @@ import com.neoapp.desafio.api_clientes.dto.AdminCreationDTO;
 import com.neoapp.desafio.api_clientes.dto.ClienteResponseDTO;
 import com.neoapp.desafio.api_clientes.dto.RegistroUsuarioDTO;
 import com.neoapp.desafio.api_clientes.exceptions.BusinessRuleException;
+import com.neoapp.desafio.api_clientes.exceptions.ResourceNotFoundException;
 import com.neoapp.desafio.api_clientes.model.Cliente;
 import com.neoapp.desafio.api_clientes.model.Role;
 import com.neoapp.desafio.api_clientes.model.Usuario;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Optional;
 
 @Service
 public class AutenticacaoService implements UserDetailsService {
@@ -70,6 +72,15 @@ public class AutenticacaoService implements UserDetailsService {
         novoAdmin.setCliente(null);
         usuarioRepository.save(novoAdmin);
     }
+
+    @Transactional
+    public void removerUsuarioPorClienteId(Long clienteId) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByClienteId(clienteId);
+
+        if (usuarioOptional.isPresent()) {
+            usuarioRepository.delete(usuarioOptional.get());
+        }
+}
 
     private ClienteResponseDTO toClienteResponseDTO(Cliente entity) {
         ClienteResponseDTO dto = new ClienteResponseDTO();
