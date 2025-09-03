@@ -1,9 +1,6 @@
 package com.neoapp.desafio.api_clientes.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,14 +28,3 @@ public class ResourceExceptionHandler {
     }
 }
 
-@Getter
-@Setter
-@AllArgsConstructor
-class StandardError {
-    private Instant timestamp;
-    private Integer status;
-    private String error;
-    private String message;
-    private String path;
-
-}
