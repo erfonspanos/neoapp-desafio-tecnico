@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Profile("dev") // A classe só será executada quando o perfil "dev" estiver ativo
+@Profile("dev") // A classe só será executada quando o perfil "dev" estiver ativo em application.properties
 public class DataSeeder implements CommandLineRunner {
 
     @Autowired
