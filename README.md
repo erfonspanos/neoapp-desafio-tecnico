@@ -4,21 +4,21 @@
 
 Esta é uma API RESTful completa desenvolvida em Java com Spring Boot como solução para o desafio técnico da NeoApp. A aplicação permite o gerenciamento de clientes pessoa física, implementando funcionalidades de CRUD, busca dinâmica, autenticação via JWT e um sistema de permissões baseado em papéis (Admin e Cliente).
 
-O projeto foi construído seguindo as melhores práticas de mercado, com uma arquitetura limpa, código testável e foco na segurança e escalabilidade.
+O projeto foi construído seguindo as melhores práticas de mercado, com uma arquitetura limpa, código testável e foco na segurança, escalabilidade e portabilidade através do Docker.
 
 ---
 
 ## ✨ Funcionalidades Principais
 
 * **Gerenciamento Completo de Clientes (CRUD):** Endpoints para criar, ler, atualizar e deletar clientes.
-* **Segurança Robusta com JWT:** Autenticação baseada em token e autorização granular.
+* **Segurança Robusta com JWT:** Autenticação baseada em token e autorização granular por papéis.
 * **Permissões Baseadas em Papéis (Roles):**
-    * **Admin:** Acesso total à API, incluindo a criação de clientes e listagem de todos os usuários.
-    * **Cliente:** Acesso restrito para visualizar, editar e apagar apenas seus próprios dados.
-* **Busca Dinâmica e Paginada:** Endpoint de busca poderoso que permite a filtragem por múltiplos atributos cadastrais com resultados paginados.
-* **Documentação Interativa com Swagger/OpenAPI:** Interface de usuário para visualizar e testar todos os endpoints da API.
-* **Ambiente de Desenvolvimento com Docker:** Banco de dados PostgreSQL gerenciado via Docker Compose para garantir consistência e facilidade na configuração.
-* **Cobertura de Testes:** Testes unitários e de integração para garantir a qualidade e o funcionamento correto da aplicação.
+    * **Admin:** Acesso total à API.
+    * **Cliente:** Acesso restrito para gerenciar apenas seus próprios dados.
+* **Busca Dinâmica e Paginada:** Endpoint de busca que permite a filtragem por múltiplos atributos.
+* **Documentação Interativa com Swagger/OpenAPI:** Interface para visualizar e testar todos os endpoints.
+* **Aplicação 100% Containerizada com Docker:** A API e o banco de dados PostgreSQL são gerenciados via Docker Compose, garantindo um ambiente consistente e fácil de executar.
+* **Cobertura de Testes:** Testes unitários (Mockito) e de integração (MockMvc) para garantir a qualidade do código.
 
 ---
 
@@ -27,12 +27,14 @@ O projeto foi construído seguindo as melhores práticas de mercado, com uma arq
 * **Linguagem:** Java 17
 * **Framework:** Spring Boot 3
 * **Persistência:** Spring Data JPA / Hibernate
-* **Banco de Dados:** PostgreSQL (gerenciado com Docker)
+* **Banco de Dados:** PostgreSQL
+* **Containerização:** Docker / Docker Compose
 * **Segurança:** Spring Security (autenticação com JWT)
 * **Validação:** Jakarta Bean Validation
 * **Documentação:** Springdoc OpenAPI (Swagger UI)
 * **Build Tool:** Maven
-* **Testes:** JUnit 5, Mockito, Spring Boot Test
+* **Testes:** JUnit 5, Mockito
+* **Ferramenta de Testes de API:** Postman
 * **Utilitários:** Lombok
 
 ---
@@ -40,33 +42,41 @@ O projeto foi construído seguindo as melhores práticas de mercado, com uma arq
 ## 🚀 Como Executar o Projeto Localmente
 
 ### Pré-requisitos
-Antes de começar, garanta que você tenha as seguintes ferramentas instaladas:
-* [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) ou superior
+Graças ao Docker, a configuração do ambiente é mínima. Você só precisa ter:
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+**Não é necessário ter Java ou Maven instalados na sua máquina!** O `Dockerfile` multi-stage cuida de todo o processo de build da aplicação em um ambiente isolado.
 
 ### Passo a Passo
 
 **1. Clone o Repositório:**
 ```bash
 git clone https://github.com/erfonspanos/neoapp-desafio-tecnico.git
-cd api-clientes
+cd neoapp-desafio-tecnico
 ```
 
-**2. Inicie o Banco de Dados:**
-Certifique-se de que o Docker Desktop esteja em execução. No terminal, na raiz do projeto, execute:
+**2. Execute a Aplicação com Docker Compose:**
+Certifique-se de que o Docker Desktop esteja em execução. No terminal, na raiz do projeto, execute o comando:
 ```bash
-docker-compose up -d
+docker-compose up --build
 ```
-Este comando irá iniciar um container PostgreSQL com um banco de dados pré-configurado e um volume para persistir os dados.
+* **O que este comando faz?**
+    * **`--build`**: Constrói a imagem Docker da aplicação Spring Boot a partir do `Dockerfile`.
+    * **`up`**: Inicia todos os serviços definidos no `docker-compose.yml` (a API e o banco de dados) e os conecta em uma mesma rede.
 
-**3. Execute a Aplicação Spring Boot:**
-No mesmo terminal, execute o wrapper do Maven para iniciar a aplicação:
+Aguarde a finalização do build e a inicialização dos containers. Você verá os logs de ambos os serviços no seu terminal. Quando o log do Spring Boot indicar que a aplicação foi iniciada, a API estará pronta para uso.
+
+A aplicação estará disponível em `http://localhost:8080`.
+
+**Para rodar em segundo plano (detached mode), use:**
 ```bash
-./mvnw spring-boot:run
+docker-compose up --build -d
 ```
-A aplicação iniciará na porta `8080`. Ao ser executada com o perfil `dev`, um usuário **Administrador** padrão será criado automaticamente (`DataSeeder`):
-* **Email:** `admin@neoapp.com`
-* **Senha:** `admin123`
+
+**Para parar todos os containers:**
+```bash
+docker-compose down
+```
 
 ---
 
@@ -74,6 +84,10 @@ A aplicação iniciará na porta `8080`. Ao ser executada com o perfil `dev`, um
 
 A documentação interativa completa está disponível via Swagger UI após iniciar a aplicação:
 * **[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
+
+Um usuário **Administrador** padrão é criado automaticamente (`DataSeeder`) para facilitar os testes:
+* **Email:** `admin@neoapp.com`
+* **Senha:** `admin123`
 
 ### Autenticação (`/auth`)
 
@@ -158,7 +172,13 @@ A documentação interativa completa está disponível via Swagger UI após inic
 
 ---
 
-## 🧠 Decisões de Arquitetura (Processo Criativo)
+## 🧠 Processo Criativo e Decisões de Arquitetura
+
+Eu iniciei o projeto criando toda a estrutura principal e obrigatória para o desafio, por ser a maior prioridade. Após desenvolver o CRUD principal da aplicação (que por sinal não levou mais de 2 dias), decidi focar em implementar algo a mais, o sistema de usuários com roles, onde a logica mudou um pouco, mas sempre me mantive focado em preservar a regra de negócios central: o ADMIN gerencia os dados dos CLIENTES, e um CLIENTE só pode gerenciar a si mesmo.
+
+Apareceu um bug durante o processo de o usuario cliente apagar sua propria conta, mas após ver o erro, com uma analise minunciosa no console, no código e no banco de dados, consegui descobrir o que estava causando o erro. Era a conexão direta que as duas classes (usuário e cliente) tinham entre si, a foreign key de `id_cliente`, que ao ser apagada estava proibindo que o usuario fosse apagado. Entao ajustei a logica para que isso fosse ajeitado.
+
+No fim, foi um ótimo lembrete de que, com um pouco de paciência, tudo dá certo 😅
 
 Este projeto foi desenvolvido com foco em criar uma base de código limpa, segura e escalável, seguindo os princípios do SOLID e as melhores práticas do ecossistema Spring.
 
@@ -176,19 +196,10 @@ Este projeto foi desenvolvido com foco em criar uma base de código limpa, segur
 
 * **Tratamento de Exceções Centralizado:** Um `@ControllerAdvice` (`ResourceExceptionHandler`) foi implementado para capturar exceções lançadas pela aplicação e traduzi-las em respostas de erro HTTP padronizadas e amigáveis, melhorando a experiência do consumidor da API.
 
-Meu foco inicial no projeto foi criar toda a estrutura principal e obrigatória para o desafio, por entender que era a maior prioridade. Após desenvolver o CRUD principal da aplicação, o que por sinal não levou mais de 1 dia, decidi focar em implementar algo a mais para realmente elevar a qualidade do projeto: um sistema de Usuarios com Roles (Administrador e Cliente).
-
-Essa decisão mudou um pouco a lógica, mas sempre me mantive focado em preservar a regra de negócios central: o ADMIN gerencia os dados dos CLIENTES, e um CLIENTE só pode gerenciar a si mesmo.
-
-Durante o processo, um dos desafios mais interessantes apareceu: um bug impedia que um usuário do tipo CLIENTE apagasse a sua própria conta, retornando um erro de acesso negado. Para resolvê-lo, com uma análise minuciosa em três frentes – o console da aplicação para entender a exceção, o código para rastrear o fluxo e o banco de dados para observar o comportamento das tabelas – consegui descobrir o que estava causando o erro.
-
-A causa era a conexão direta que as duas classes (Usuario e Cliente) tinham entre si. A foreign key de cliente_id na tabela de usuários impedia que o registro do cliente fosse apagado primeiro. Para resolver, ajustei a lógica na camada de serviço para que, ao solicitar a exclusão, o sistema primeiro remova o Usuario associado e só então delete o Cliente, respeitando a ordem de integridade dos dados.
-
-**No fim, foi um ótimo lembrete de que, com um pouco de paciência, tudo da certo 😅**
 ---
 
 ## 🔮 Próximos Passos e Melhorias Futuras
 
-* **Dockerizar a Aplicação:** Criar um `Dockerfile` para a aplicação Spring Boot para que todo o ambiente (API + Banco) possa ser orquestrado com um único comando `docker-compose up`.
-* **Deploy na Nuvem:** Publicar a aplicação em um provedor de nuvem (Heroku, Render, AWS) para torná-la acessível publicamente.
-* **Cache:** Implementar uma camada de cache (ex: com Redis) para otimizar consultas frequentes.
+* **Deploy na Nuvem:** Publicar a aplicação containerizada em um provedor de nuvem (Heroku, Render, AWS) para torná-la acessível publicamente.
+* **Cache:** Implementar uma camada de cache (ex: com Redis) para otimizar consultas frequentes e melhorar a performance.
+* **Testes de Integração Contínua (CI/CD):** Configurar um pipeline de CI/CD (ex: com GitHub Actions) para automatizar a execução dos testes e o processo de deploy.
