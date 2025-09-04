@@ -19,11 +19,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        // 1. Define o status HTTP da resposta como 403 Forbidden
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json;charset=UTF-8");
 
-        // 2. Cria o nosso objeto de erro padrão para acesso negado
         String errorMessage = "Acesso negado. Você não tem permissão para acessar este recurso.";
         StandardError err = new StandardError(
                 Instant.now(),
@@ -33,7 +31,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                 request.getRequestURI()
         );
 
-        // 3. Converte o objeto de erro para JSON e escreve na resposta
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         response.getWriter().write(mapper.writeValueAsString(err));

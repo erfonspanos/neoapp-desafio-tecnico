@@ -55,7 +55,7 @@ class ClienteServiceImplTest {
                 "11122233344",
                 "joao.silva@email.com",
                 "85988887777",
-                LocalDate.now().minusYears(30), // Cliente com 30 anos
+                LocalDate.now().minusYears(30),
                 LocalDateTime.now(),
                 endereco
         );
@@ -118,21 +118,18 @@ class ClienteServiceImplTest {
         });
 
         assertEquals("CPF já cadastrado no sistema.", exception.getMessage());
-        verify(clienteRepository, never()).save(any()); // Verifica que o save nunca foi chamado
+        verify(clienteRepository, never()).save(any());
     }
 
     @Test
     @DisplayName("Deve remover cliente com sucesso")
     void removerCliente_deveChamarMetodosCorretos_quandoIdExiste() {
         when(clienteRepository.existsById(1L)).thenReturn(true);
-        // Usamos doNothing() para métodos void
         doNothing().when(autenticacaoService).removerUsuarioPorClienteId(1L);
         doNothing().when(clienteRepository).deleteById(1L);
 
-        // Act
         clienteService.removerCliente(1L);
 
-        // Assert
         verify(autenticacaoService, times(1)).removerUsuarioPorClienteId(1L);
         verify(clienteRepository, times(1)).deleteById(1L);
     }

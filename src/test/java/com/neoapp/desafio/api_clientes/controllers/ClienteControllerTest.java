@@ -15,23 +15,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class ClienteControllerTest {
 
     @Autowired
@@ -40,16 +40,12 @@ class ClienteControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // 1. O CAMPO AGORA É INJETADO COM @Autowired
-    // O Spring vai injetar o Mock que definimos na classe de configuração abaixo.
     @Autowired
     private ClienteService clienteService;
 
-    // 2. CLASSE DE CONFIGURAÇÃO DE TESTE ANINHADA E ESTÁTICA
     @TestConfiguration
     static class ClienteControllerTestConfig {
 
-        // 3. ESTE @Bean SUBSTITUI O BEAN REAL de ClienteService por um Mock do Mockito.
         @Bean
         @Primary
         public ClienteService clienteService() {
@@ -62,7 +58,6 @@ class ClienteControllerTest {
 
     @BeforeEach
     void setUp() {
-        // O ObjectMapper precisa do módulo de data do Java 8 para converter LocalDate
         objectMapper.registerModule(new JavaTimeModule());
 
         Endereco endereco = new Endereco();
