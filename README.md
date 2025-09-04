@@ -81,6 +81,7 @@ docker-compose down
 ---
 
 ##  API Endpoints
+##  OBS: Recomendável testar os endpoints pelo Postman/Insomnia (Swagger está sujeito a possíveis erros nos gets /clientes e /clientes/buscar, apesar disso, ao ser testado no Postman/Insomnia, todos os endpoints estão funcionando corretamente.)
 
 A documentação interativa completa está disponível via Swagger UI após iniciar a aplicação:
 * **[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
